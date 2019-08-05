@@ -1,2 +1,5 @@
 .idea
 venv
+*.db
+__pycache__
+migrations
