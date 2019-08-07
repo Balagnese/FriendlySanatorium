@@ -1,5 +1,6 @@
 from ..model.diet import Diet
 from .. import db
+from ..util import exceptions as exs
 
 
 def save_diet(name, description):
@@ -24,10 +25,7 @@ def get_a_diet(diet_id):
 def delete_a_diet(diet_id):
     diet = get_a_diet(diet_id)
     if not diet:
-        return {
-            'status': 'fail',
-            'message': 'Diet {} not found'.format(diet_id)
-        }, 404
+        raise exs.EntityNotFoundException('diet')
 
     db.session.delete(diet)
     db.session.commit()

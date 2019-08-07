@@ -16,7 +16,7 @@ class Config:
     JWT_COOKIE_CSRF_PROTECT = False
     ACCESS_TOKEN_NAME = 'access_token'
     REFRESH_TOKEN_NAME = 'refresh_token'
-    ERROR_INCLUDE_MESSAGE = 'False'
+    ERROR_INCLUDE_MESSAGE = False
 
 
 

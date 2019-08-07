@@ -59,7 +59,7 @@ class ArgsAggregator:
 
         for checking, checker in self._checkers.items():
             try:
-                checker[checking](checking, self.args[checking])
+                self.args[checking] = checker(self.args[checking])
             except ArgValueError as e:
                 checking_errors[checking] = {'message': str(e), 'code': e.code}
             # except Exception as e:

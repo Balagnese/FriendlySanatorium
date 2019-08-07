@@ -1,6 +1,7 @@
 from flask_restplus import Resource
 from ..util.dto import DietDto
 from ..service.diet_service import save_diet, get_a_diet, get_all_diets, delete_a_diet
+from ..util import exceptions as exs
 
 api = DietDto.api
 diet_create_model = DietDto.diet_create_model()
@@ -32,7 +33,7 @@ class Diet(Resource):
         """ Get diet by id """
         diet = get_a_diet(diet_id)
         if diet is None:
-            api.abort(404)
+            exs.EntityNotFoundException('diet')
         return diet
 
     @api.response(404, 'diet not found')

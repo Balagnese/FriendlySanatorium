@@ -2,14 +2,13 @@ from app.main import db
 from app.main.model.client_profile import ClientProfile, Gender
 from app.main.model.user import User
 
+from ..util import exceptions as exs
+
 
 def save_client(user_public_id, is_child, gender, birthday, time_arrival, time_departure):
     user = User.query.filter_by(public_id=user_public_id).first()
     if not user:
-        return {
-            'status': 'fail',
-            'message': 'User {} not found'.format(user_public_id)
-        }, 404
+        raise exs.EntityNotFoundException('Client')
 
     client = ClientProfile.query.filter_by(user=user).first()
     if client:

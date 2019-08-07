@@ -2,6 +2,7 @@ from flask_restplus import Resource
 
 from ..util.dto import ClientProfileDto
 from ..service.client_service import get_a_client, save_client, get_all_clients
+from ..util import exceptions as exs
 
 api = ClientProfileDto.api
 
@@ -30,5 +31,5 @@ class Client(Resource):
         """ Get a client by public id """
         client = get_a_client(public_id)
         if not client:
-            api.abort(404)
+            exs.EntityNotFoundException('client')
         return client

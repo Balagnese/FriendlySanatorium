@@ -14,6 +14,8 @@ from app.main.util.dto import AuthDto
 from app import jwt
 import json
 
+from ..util import exceptions as exs
+
 api = AuthDto.api
 
 class Auth:
@@ -198,3 +200,10 @@ def _handle_failed_user_claims_verification(e):
                'status': 'fail',
                'message': 'User claims verification failed'
            }, 400
+
+@api.errorhandler(exs.EntityNotFoundException)
+def _handle_failed_to_find_entity(e: exs.EntityNotFoundException):
+    return {
+        'status': 'fail',
+        'message': e.message
+    }, 404
