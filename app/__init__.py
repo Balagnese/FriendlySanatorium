@@ -27,7 +27,7 @@ api = Api(
     doc='/doc',
     prefix='/api',
     description='test api for Friendly Sanatorium',
-    # authorizations=authorizations
+    authorizations=authorizations
 )
 
 jwt = JWTManager()

@@ -4,11 +4,18 @@ from app.main.model.user import User
 
 from ..util import exceptions as exs
 
+from ..service.user_service import get_a_user
+from ..service.diet_service import get_a_diet
 
-def save_client(user_public_id, is_child, gender, birthday, time_arrival, time_departure):
-    user = User.query.filter_by(public_id=user_public_id).first()
+
+def save_client(user_public_id, name, surname, patronymic, is_child, gender, birthday, time_arrival, time_departure, diet_id):
+    user = get_a_user(user_public_id)
     if not user:
-        raise exs.EntityNotFoundException('Client')
+        raise exs.EntityNotFoundException('user')
+
+    diet = get_a_diet(diet_id)
+    if not diet:
+        raise exs.EntityNotFoundException('diet')
 
     client = ClientProfile.query.filter_by(user=user).first()
     if client:
@@ -18,6 +25,10 @@ def save_client(user_public_id, is_child, gender, birthday, time_arrival, time_d
         }, 400
 
     client = ClientProfile(user=user,
+                           name=name,
+                           surname=surname,
+                           patronymic=patronymic,
+                           diet=diet,
                            gender=gender,
                            is_child=is_child,
                            birthday=birthday,
@@ -31,8 +42,17 @@ def save_client(user_public_id, is_child, gender, birthday, time_arrival, time_d
         'message': 'Client successfully created'
     }, 200
 
+
 def get_all_clients():
     return ClientProfile.query.all()
 
+
 def get_a_client(public_id):
-    return ClientProfile.query.filter_by(ClientProfile.user.public_id.in_((public_id,))).first()
+    user = get_a_user(public_id)
+    if not user:
+        return None
+    return user.client_profile
+
+
+def get_children_of(client):
+    return client.children

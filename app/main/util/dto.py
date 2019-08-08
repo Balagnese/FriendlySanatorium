@@ -1,6 +1,8 @@
 from flask_restplus import Namespace, fields
 import datetime
 import string
+
+from ..util.helpers import datetime_parser, min_length_validate
 from .ArgsCollector import ArgsAggregator, ArgValueError
 
 from .reg_exps import (USERNAME_REGEX, PASSWORD_REGEX,
@@ -97,16 +99,28 @@ class ClientProfileDto:
             self.add_argument('is_child').with_field(fields.Boolean(default=False, required=True))\
                 .with_parser(type=bool, default=False, required=True)
 
+            self.add_argument('name').with_field(fields.String(min_length=1)).with_parser(
+                type=min_length_validate('name', 1), required=True)
+
+            self.add_argument('surname').with_field(fields.String(min_length=1)).with_parser(
+                type=min_length_validate('surname', 1), required=True)
+
+            self.add_argument('patronymic').with_field(fields.String(min_length=1)).with_parser(
+                type=min_length_validate('patronymic', 1))
+
             gender_strs = [val.value for val in [Gender.MALE, Gender.FEMALE]]
             self.add_argument('gender')\
                 .with_field(fields.String(enum=gender_strs, required=True))\
-                .with_parser(type=ClientProfileDto.gender, choices=gender_strs, required=True)
+                .with_parser(type=ClientProfileDto.gender, choices=[Gender.MALE, Gender.FEMALE], required=True)
+
+            self.add_argument('birthday')\
+                .with_field(fields.DateTime).with_parser(type=datetime_parser, required=False)
 
             self.add_argument('time_arrival').with_field(fields.DateTime(required=True))\
-                .with_parser(type=datetime.datetime, required=True)
+                .with_parser(type=datetime_parser, required=True)
 
             self.add_argument('time_departure').with_field(fields.DateTime(required=True)) \
-                .with_parser(type=datetime.datetime, required=True)
+                .with_parser(type=datetime_parser, required=True)
 
             self.add_argument('diet_id').with_field(fields.Integer(required=True)).with_parser(type=int, required=True)
 
@@ -114,9 +128,15 @@ class ClientProfileDto:
         def __init__(self):
             super().__init__(ClientProfileDto.api, 'Client')
 
-            self.add_argument('username').with_field(fields.String)
+            self.add_argument('public_id').with_field(fields.String(attribute=lambda x:x.user.public_id))
 
-            self.add_argument('public_id').with_field(fields.String)
+            self.add_argument('name').with_field(fields.String)
+
+            self.add_argument('surname').with_field(fields.String)
+
+            self.add_argument('patronymic').with_field(fields.String)
+
+            self.add_argument('birthday').with_field(fields.DateTime)
 
             self.add_argument('is_child').with_field(fields.Boolean)
 
@@ -258,13 +278,46 @@ class ProcedureDto:
         return ProcedureDto._procedure_model
 
 
+class ClientProcedureDto:
+    api = Namespace('client_procedure', description='operations related to managing client procedures')
 
+    class ClientProcedureCreate(ArgsAggregator):
+        def __init__(self):
+            super().__init__(ClientProcedureDto.api, 'ClientProcedureCreate')
+            # self.add_argument('client_id').with_field(fields.Integer(required=True))\
+            #     .with_parser(location='json', type=int)
 
+            self.add_argument('procedure_id').with_field(fields.Integer(required=True))\
+                .with_parser(location='json', type=int)
 
+            self.add_argument('time').with_field(fields.DateTime(required=True))\
+                .with_parser(location='json', type=datetime.datetime)
 
+            self.add_argument('place').with_field(fields.String(required=True))\
+                .with_parser(location='json', type=str)
 
+    class ClientProcedureModel(ArgsAggregator):
+        def __init__(self):
+            super().__init__(ClientProcedureDto.api, 'ClientProcedureModel')
+            self.add_argument('client_id').with_field(fields.Integer)
+            self.add_argument('procedure_id').with_field(fields.Integer)
+            self.add_argument('time').with_field(fields.DateTime)
+            self.add_argument('place').with_field(fields.String)
 
+    _client_procedure_create_model = None
 
+    @staticmethod
+    def client_procedure_create_model():
+        if ClientProcedureDto._client_procedure_create_model is None:
+            ClientProcedureDto._client_procedure_create_model = ClientProcedureDto.ClientProcedureCreate()
+        return ClientProcedureDto._client_procedure_create_model
 
+    _client_procedure_model = None
+
+    @staticmethod
+    def client_procedure_model():
+        if ClientProcedureDto._client_procedure_model is None:
+            ClientProcedureDto._client_procedure_model = ClientProcedureDto.ClientProcedureModel()
+        return ClientProcedureDto._client_procedure_model
 
 
