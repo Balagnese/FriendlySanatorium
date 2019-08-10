@@ -8,16 +8,11 @@ from .main import db
 blueprint = Blueprint('api', __name__)
 
 authorizations = {
-    'Bearer Access Auth': {
+    'Bearer Auth': {
         'type': 'apiKey',
         'in': 'header',
         'name': 'Authorization'
-    },
-    'Bearer Refresh Auth': {
-        'type': 'apiKey',
-        'in': 'header',
-        'name': 'Authorization'
-    },
+    }
 }
 
 api = Api(

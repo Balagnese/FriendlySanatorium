@@ -25,14 +25,13 @@ class Auth:
             user = User.query.filter_by(username=username).first()
             if user and user.check_password(password):
 
-                access_token = create_access_token(user.id)
-                refresh_token = create_refresh_token(user.id)
+                token = create_access_token(user.id)
+                # refresh_token = create_refresh_token(user.id)
 
                 response_object = {
                     'status': 'success',
                     'message': 'Successfully logged in.',
-                    'access_token': access_token,
-                    'refresh_token': refresh_token
+                    'token': token
                 }
                 return response_object, 200
             else:
@@ -57,7 +56,7 @@ class Auth:
 
 def admin_required(fn):
     @wraps(fn)
-    @api.doc(security='Bearer Access Auth')
+    @api.doc(security='Bearer Auth')
     def wrapper(*args, **kwargs):
         verify_jwt_in_request()
         u: User = current_user
@@ -73,7 +72,7 @@ def admin_required(fn):
 
 def login_required(fn):
     @wraps(fn)
-    @api.doc(security='Bearer Access Auth')
+    @api.doc(security='Bearer Auth')
     def wrapper(*args, **kwargs):
         return jwt_required(fn)(*args, **kwargs)
     return wrapper

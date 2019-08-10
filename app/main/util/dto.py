@@ -128,7 +128,10 @@ class ClientProfileDto:
         def __init__(self):
             super().__init__(ClientProfileDto.api, 'Client')
 
-            self.add_argument('public_id').with_field(fields.String(attribute=lambda x:x.user.public_id))
+            def pr(el):
+                str(el)
+                print(el)
+            self.add_argument('public_id').with_field(fields.String(attribute=lambda x: x.user.public_id))
 
             self.add_argument('name').with_field(fields.String)
 
