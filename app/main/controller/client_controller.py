@@ -58,13 +58,13 @@ class ClientChildren(Resource):
         return get_children_of(client)
 
 
-@api.route('/<client_id>')
+@api.route('/<client_public_id>')
 class Client(Resource):
     @api.doc('get a client')
     @api.marshal_with(client_model.model)
-    def get(self, client_id):
+    def get(self, client_public_id):
         """ Get a client by public id """
-        client = get_a_client(client_id)
+        client = get_a_client(client_public_id)
         if not client:
             exs.EntityNotFoundException('client')
         return client

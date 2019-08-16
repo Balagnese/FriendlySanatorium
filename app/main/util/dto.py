@@ -294,7 +294,7 @@ class ClientProcedureDto:
                 .with_parser(location='json', type=int)
 
             self.add_argument('time').with_field(fields.DateTime(required=True))\
-                .with_parser(location='json', type=datetime.datetime)
+                .with_parser(location='json', type=datetime_parser)
 
             self.add_argument('place').with_field(fields.String(required=True))\
                 .with_parser(location='json', type=str)
@@ -302,7 +302,8 @@ class ClientProcedureDto:
     class ClientProcedureModel(ArgsAggregator):
         def __init__(self):
             super().__init__(ClientProcedureDto.api, 'ClientProcedureModel')
-            self.add_argument('client_id').with_field(fields.Integer)
+            self.add_argument('id').with_field(fields.Integer)
+            self.add_argument('client_public_id').with_field(fields.String(attribute=lambda x:x.client.user.public_id))
             self.add_argument('procedure_id').with_field(fields.Integer)
             self.add_argument('time').with_field(fields.DateTime)
             self.add_argument('place').with_field(fields.String)
