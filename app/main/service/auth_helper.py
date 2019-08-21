@@ -206,3 +206,11 @@ def _handle_failed_to_find_entity(e: exs.EntityNotFoundException):
         'status': 'fail',
         'message': e.message
     }, 404
+
+
+@api.errorhandler(exs.InvalidArgumentFormat)
+def _handle_invalid_format(e: exs.InvalidArgumentFormat):
+    return {
+        'status': 'fail',
+        'message': e.message
+    }, 422

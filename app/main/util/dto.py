@@ -10,6 +10,15 @@ from .reg_exps import (USERNAME_REGEX, PASSWORD_REGEX,
 
 from app.main.model.client_profile import Gender
 
+# class IdsContainer(ArgsAggregator):
+#     def __init__(self, api, ):
+
+
+class IDsArray(ArgsAggregator):
+    def __init__(self, api):
+        super().__init__(api, "ids")
+        self.add_argument('ids').with_field(fields.List(fields.Integer)).with_parser(type=int, action='append')
+
 
 class UserDto:
     api = Namespace('users ns', description='user related operations')
@@ -324,4 +333,178 @@ class ClientProcedureDto:
             ClientProcedureDto._client_procedure_model = ClientProcedureDto.ClientProcedureModel()
         return ClientProcedureDto._client_procedure_model
 
+
+class DailyDishesDto:
+    api = Namespace('dishes', description='operation related to daily dishes only')
+
+    class DishCreate(ArgsAggregator):
+        def __init__(self):
+            super().__init__(DailyDishesDto.api, 'DishCreate')
+            self.add_argument('name').with_field(fields.String(min_length=1)).with_parser(type=min_length_validate('name', 1))
+            self.add_argument('description').with_field(fields.String).with_parser(type=str)
+
+    class DishModel(ArgsAggregator):
+        def __init__(self):
+            super().__init__(DailyDishesDto.api, 'DishModel')
+            self.add_argument('dish_id').with_field(fields.Integer(attribute=lambda x: x.id))
+            self.add_argument('name').with_field(fields.String)
+            self.add_argument('description').with_field(fields.String)
+
+    _dish_create_model = None
+
+    @staticmethod
+    def dish_create_model():
+        if DailyDishesDto._dish_create_model is None:
+            DailyDishesDto._dish_create_model = DailyDishesDto.DishCreate()
+
+        return DailyDishesDto._dish_create_model
+
+    _dish_model = None
+
+    @staticmethod
+    def dish_model():
+        if DailyDishesDto._dish_model is None:
+            DailyDishesDto._dish_model = DailyDishesDto.DishModel()
+
+        return DailyDishesDto._dish_model
+
+    class DishesGroupCreate(ArgsAggregator):
+        def __init__(self):
+            super().__init__(DailyDishesDto.api, 'DishesGroupCreate')
+            self.add_argument('name').with_field(fields.String).with_parser(type=min_length_validate('name', 1))
+
+    class DishesGroupModel(ArgsAggregator):
+        def __init__(self):
+            super().__init__(DailyDishesDto.api, 'DishesGroupModel')
+            self.add_argument('dishes_group_id').with_field(fields.Integer(attribute=lambda x: x.id))
+            self.add_argument('name').with_field(fields.String)
+            self.add_argument('dishes').with_field(fields.Nested(DailyDishesDto.dish_model().model))
+
+    _dishes_group_create_model = None
+
+    @staticmethod
+    def dishes_group_create_model():
+        if DailyDishesDto._dishes_group_create_model is None:
+            DailyDishesDto._dishes_group_create_model = DailyDishesDto.DishesGroupCreate()
+
+        return DailyDishesDto._dishes_group_create_model
+
+    _dishes_group_model = None
+
+    @staticmethod
+    def dishes_group_model():
+        if DailyDishesDto._dishes_group_model is None:
+            DailyDishesDto._dishes_group_model = DailyDishesDto.DishesGroupModel()
+
+        return DailyDishesDto._dishes_group_model
+
+    class DailyMenuCreate(ArgsAggregator):
+        def __init__(self):
+            super().__init__(DailyDishesDto.api, 'DailyMenuCreate')
+            self.add_argument('date').with_field(fields.Date).with_parser(type=datetime_parser)
+            self.add_argument('diet_id').with_field(fields.Integer).with_parser(type=int)
+
+    class DailyMenuModel(ArgsAggregator):
+        def __init__(self):
+            super().__init__(DailyDishesDto.api, 'DailyMenuModel')
+            self.add_argument('id').with_field(fields.Integer)
+            self.add_argument('date').with_field(fields.Date)
+            self.add_argument('diet_id').with_field(fields.Integer)
+            self.add_argument('breakfast').with_field(fields.List(fields.Nested(DailyDishesDto.dishes_group_model().model),
+                                                                  attribute=lambda x: x.breakfast.dishes_lists))
+            self.add_argument('lunch').with_field(fields.List(fields.Nested(DailyDishesDto.dishes_group_model().model),
+                                                              attribute=lambda x: x.lunch.dishes_lists))
+            self.add_argument('supper').with_field(fields.List(fields.Nested(DailyDishesDto.dishes_group_model().model),
+                                                               attribute=lambda x: x.supper.dishes_lists))
+
+    _daily_menu_create_model = None
+
+    @staticmethod
+    def daily_menu_create_model():
+        if DailyDishesDto._daily_menu_create_model is None:
+            DailyDishesDto._daily_menu_create_model = DailyDishesDto.DailyMenuCreate()
+
+        return DailyDishesDto._daily_menu_create_model
+
+    _daily_menu_model = None
+
+    @staticmethod
+    def daily_menu_model():
+        if DailyDishesDto._daily_menu_model is None:
+            DailyDishesDto._daily_menu_model = DailyDishesDto.DailyMenuModel()
+
+        return DailyDishesDto._daily_menu_model
+
+
+class ClientDailyDishesDto:
+    api = Namespace('client_daily_dishes')
+
+    class ClientSelectedDishCreate(ArgsAggregator):
+        def __init__(self):
+            super().__init__(ClientDailyDishesDto.api, 'ClientSelectedDishCreate')
+            self.add_argument('daily_menu_id').with_field(fields.Integer).with_parser(type=int)
+            meals = ('breakfast', 'lunch', 'supper')
+            self.add_argument('meal_tag')\
+                .with_field(fields.String(enum=meals))\
+                .with_parser(type=str, choices=meals)
+
+            self.add_argument('dishes_group_id').with_field(fields.Integer).with_parser(type=int)
+            self.add_argument('dish_id').with_field(fields.Integer).with_parser(type=int)
+
+    _client_selected_dish_create = None
+
+    @staticmethod
+    def client_selected_dish_create_model():
+        if ClientDailyDishesDto._client_selected_dish_create is None:
+            ClientDailyDishesDto._client_selected_dish_create = ClientDailyDishesDto.ClientSelectedDishCreate()
+
+        return ClientDailyDishesDto._client_selected_dish_create
+
+    class ClientSelectedDish(ArgsAggregator):
+        def __init__(self):
+            super().__init__(ClientDailyDishesDto.api, 'ClientSelectedDish')
+            self.add_argument('dish').with_field(fields.Nested(DailyDishesDto.dish_model().model))
+            self.add_argument('dishes_group').with_field(fields.Nested(DailyDishesDto.dishes_group_model().model))
+
+    _client_selected_dish = None
+
+    @staticmethod
+    def client_selected_dish():
+        if ClientDailyDishesDto._client_selected_dish is None:
+            ClientDailyDishesDto._client_selected_dish = ClientDailyDishesDto.ClientSelectedDish()
+
+        return ClientDailyDishesDto._client_selected_dish
+
+    class ClientMealSelection(ArgsAggregator):
+        def __init__(self):
+            super().__init__(ClientDailyDishesDto.api, 'ClientMealSelection')
+            self.add_argument('not_selected').with_field(fields.List(fields.Nested(DailyDishesDto.dishes_group_model().model)))
+            self.add_argument('selected')\
+                .with_field(fields.List(fields.Nested(ClientDailyDishesDto.client_selected_dish().model)))
+
+    _client_meal_selection = None
+
+    @staticmethod
+    def client_meal_selection():
+        if ClientDailyDishesDto._client_meal_selection is None:
+            ClientDailyDishesDto._client_meal_selection = ClientDailyDishesDto.ClientMealSelection()
+
+        return ClientDailyDishesDto._client_meal_selection
+
+    class ClientSelectedDishesModel(ArgsAggregator):
+        def __init__(self):
+            super().__init__(ClientDailyDishesDto.api, 'ClientSelectedDishModel')
+            self.add_argument('daily_menu_id').with_field(fields.Integer)
+            self.add_argument('breakfast').with_field(fields.Nested(ClientDailyDishesDto.client_meal_selection().model))
+            self.add_argument('lunch').with_field(fields.Nested(ClientDailyDishesDto.client_meal_selection().model))
+            self.add_argument('supper').with_field(fields.Nested(ClientDailyDishesDto.client_meal_selection().model))
+
+    _client_selected_dishes_model = None
+
+    @staticmethod
+    def client_selected_dishes_model():
+        if ClientDailyDishesDto._client_selected_dishes_model is None:
+            ClientDailyDishesDto._client_selected_dishes_model = ClientDailyDishesDto.ClientSelectedDishesModel()
+
+        return ClientDailyDishesDto._client_selected_dishes_model
 

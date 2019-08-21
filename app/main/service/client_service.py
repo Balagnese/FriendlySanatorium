@@ -1,6 +1,5 @@
 from app.main import db
-from app.main.model.client_profile import ClientProfile, Gender
-from app.main.model.user import User
+from app.main.model.client_profile import ClientProfile
 
 from ..util import exceptions as exs
 

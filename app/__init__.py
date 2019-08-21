@@ -46,6 +46,8 @@ from .main.controller.client_controller import api as client_ns
 from .main.controller.diet_controller import api as diet_ns
 from .main.controller.procedure_controller import api as procedure_ns
 from .main.controller.client_procedure_controller import api as client_procedure_ns
+from .main.controller.daily_dishes_controller import api as daily_dishes_ns
+from .main.controller.client_daily_dishes_controller import api as client_daily_dishes_ns
 
 from .main.controller.test_controller import api as test_ns
 
@@ -58,5 +60,7 @@ api.add_namespace(client_ns, path='/clients')
 api.add_namespace(diet_ns, path='/diets')
 api.add_namespace(procedure_ns, path='/procedures')
 api.add_namespace(client_procedure_ns, path='/clients')
+api.add_namespace(daily_dishes_ns)
+api.add_namespace(client_daily_dishes_ns, path='/clients')
 
 api.add_namespace(test_ns, path='/test')

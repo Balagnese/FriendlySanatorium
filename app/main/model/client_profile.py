@@ -14,6 +14,11 @@ class Gender(enum.Enum):
     FEMALE = 'female'
 
 
+class Shift(enum.Enum):
+    FIRST = 'first'
+    SECOND = 'second'
+
+
 class ClientProfile(db.Model):
     """Client model for storing client related details"""
     __tablename__ = 'client_profile'
@@ -38,6 +43,8 @@ class ClientProfile(db.Model):
 
     diet_id = db.Column(db.Integer, db.ForeignKey('diet.id'), nullable=False)
     diet = db.relationship('Diet')
+
+    # is_first_shift = db.Column(db.Boolean, nullable=False, default=True)
 
     parents = db.relationship("ClientProfile",
                                secondary=parent_to_child,
