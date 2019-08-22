@@ -251,6 +251,12 @@ class ProcedureDto:
 
         return res
 
+    @staticmethod
+    def check_procedure_duration(duration):
+        if duration < 0:
+            raise ArgsAggregator('duration cannot be negative')
+        return duration
+
     class ProcedureCreate(ArgsAggregator):
         def __init__(self):
             super().__init__(ProcedureDto.api, 'ProcedureCreate')
@@ -265,6 +271,9 @@ class ProcedureDto:
                 .with_parser(location='json', type=str, action='append', required=True)\
                 .with_value_check(ProcedureDto.filter_out_empty_places)
 
+            self.add_argument('duration').with_field(fields.Integer(help='duration in minutes', required=True))\
+                .with_parser(type=int).with_value_check(ProcedureDto.check_procedure_duration)
+
     class ProcedureModel(ArgsAggregator):
         def __init__(self):
             super().__init__(ProcedureDto.api, 'Procedure')
@@ -272,6 +281,7 @@ class ProcedureDto:
             self.add_argument('name').with_field(fields.String)
             self.add_argument('description').with_field(fields.String)
             self.add_argument('places').with_field(fields.List(fields.String))
+            self.add_argument('duration').with_field(fields.Integer)
 
     _procedure_create_model = None
 

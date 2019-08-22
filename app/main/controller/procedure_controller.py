@@ -20,7 +20,7 @@ class ProcedureList(Resource):
     @api.response(201, 'procedure successfully created')
     def post(self, procedure_params):
         """ Create new Procedure """
-        return save_procedure(procedure_params['name'], procedure_params['description'], procedure_params['places'])
+        return save_procedure(procedure_params['name'], procedure_params['description'], procedure_params['places'], procedure_params['duration'])
 
 
 @api.route('/<procedure_id>')

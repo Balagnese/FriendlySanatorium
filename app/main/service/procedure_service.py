@@ -3,9 +3,9 @@ from .. import db
 from ..util.exceptions import EntityNotFoundException
 
 
-def save_procedure(name, description, places):
+def save_procedure(name, description, places, duration):
     try:
-        procedure = Procedure(name=name, description=description, places=places)
+        procedure = Procedure(name=name, description=description, places=places, duration=duration)
 
         db.session.add(procedure)
         db.session.commit()

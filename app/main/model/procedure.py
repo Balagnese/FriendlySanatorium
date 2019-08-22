@@ -13,6 +13,8 @@ class Procedure(db.Model):
 
     places = db.Column(db.JSON, default=[])
 
+    duration = db.Column(db.Integer, nullable=False)
+
     def __repr__(self):
         return '<Procedure {}>'.format(self.name)
 
