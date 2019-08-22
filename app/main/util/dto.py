@@ -313,7 +313,7 @@ class ClientProcedureDto:
             super().__init__(ClientProcedureDto.api, 'ClientProcedureModel')
             self.add_argument('id').with_field(fields.Integer)
             self.add_argument('client_public_id').with_field(fields.String(attribute=lambda x:x.client.user.public_id))
-            self.add_argument('procedure_id').with_field(fields.Integer)
+            self.add_argument('procedure').with_field(fields.Nested(ProcedureDto.procedure_model().model))
             self.add_argument('time').with_field(fields.DateTime)
             self.add_argument('place').with_field(fields.String)
 
