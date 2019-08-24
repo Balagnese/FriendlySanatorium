@@ -6,6 +6,8 @@ import android.os.Looper;
 import com.example.balagnese.testapp.DataTypes.ClientSelectedDishModel;
 import com.example.balagnese.testapp.Models.DishModel;
 
+import org.joda.time.DateTime;
+
 public class TomorrowDishesPresenter {
     
     private TomorrowDishesView tdv;
@@ -17,11 +19,13 @@ public class TomorrowDishesPresenter {
         tdv = tomorrowDishesView;
         publicId = id;
         handler = new android.os.Handler(Looper.getMainLooper());
+        loadMenu();
     }
     
     public void loadMenu(){
 
 //        DateTime dateTime = DateTime.now();
+//        dateTime.plusDays(1);
 //        StringBuilder stringBuilder = new StringBuilder();
 //        String year = String.valueOf(dateTime.year().get());
 //        String month = String.valueOf(dateTime.monthOfYear().get());
@@ -74,4 +78,6 @@ public class TomorrowDishesPresenter {
             });
         }
     }
+
+
 }

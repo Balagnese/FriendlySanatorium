@@ -48,23 +48,8 @@ public class TodayDishesActivity extends AppCompatActivity implements TodayDishe
         breakfastTextView.setTextAppearance(this, R.style.TextAppearance_AppCompat_Large);
         layout.addView(breakfastTextView);
 
-        //breakfast
-        List<DishesGroup> notSelectedBreakfast = breakfast.getNot_selected();
-//        for (DishesGroup dishesGroup:
-//                notSelectedBreakfast) {
-//            List<Dish> dishes = dishesGroup.getDishes();
-//            for (Dish dish: dishes) {
-//                String dishName = dish.getName();
-//            }
-//        }
-
         List<ClientSelectedDish> selectedBreakfast = breakfast.getSelected();
-        for (ClientSelectedDish selectedDish: selectedBreakfast) {
-            Dish dish = selectedDish.getDish();
-            DishesGroup group = selectedDish.getDishes_group();
-            DishesGroup groupForShow = selectDish(dish, group);
-            showDishesGroup(groupForShow);
-        }
+        showSelectedMenu(selectedBreakfast);
 
         TextView supperTextView = new TextView(this);
         supperTextView.setText("Обед");
@@ -73,14 +58,7 @@ public class TodayDishesActivity extends AppCompatActivity implements TodayDishe
 
         //supper
         List<ClientSelectedDish> selectedSupper = supper.getSelected();
-        for (ClientSelectedDish selectedDish:
-             selectedSupper) {
-            Dish dish = selectedDish.getDish();
-            DishesGroup group = selectedDish.getDishes_group();
-            DishesGroup groupForShow = selectDish(dish, group);
-            showDishesGroup(groupForShow);
-
-        }
+        showSelectedMenu(selectedSupper);
 
         TextView lunchTextView = new TextView(this);
         lunchTextView.setText("Ужин");
@@ -89,49 +67,37 @@ public class TodayDishesActivity extends AppCompatActivity implements TodayDishe
 
         //lunch
         List<ClientSelectedDish> selectedLunch = lunch.getSelected();
+        showSelectedMenu(selectedLunch);
+
+    }
+
+    public void showSelectedMenu(List<ClientSelectedDish> selectedMeal){
         for (ClientSelectedDish selectedDish:
-             selectedLunch) {
-            Dish dish = selectedDish.getDish();
+                selectedMeal) {
+            String name = selectedDish.getDishes_group().getName();
+            TextView nameText = new TextView(this);
+            nameText.setTextAppearance(this, R.style.TextAppearance_AppCompat_Body2);
+            nameText.setText(name);
+            layout.addView(nameText);
+            RadioGroup radioGroup = new RadioGroup(this);
             DishesGroup group = selectedDish.getDishes_group();
-            DishesGroup groupForShow = selectDish(dish, group);
-            showDishesGroup(groupForShow);
+            for (Dish dish:
+                    group.getDishes()) {
+                RadioButton newRadioButton = new RadioButton(this);
+                newRadioButton.setText(dish.getName());
+                if (dish.getDish_id() == selectedDish.getDish().getDish_id()) {
+                    dish.select();
+                    newRadioButton.setChecked(true);
+                }
+                newRadioButton.setClickable(false);
+                newRadioButton.setTextAppearance(this, R.style.TextAppearance_AppCompat_Body2);
+                radioGroup.addView(newRadioButton);
+
+            }
+
+            layout.addView(radioGroup);
         }
 
-
-
-    }
-
-    public DishesGroup selectDish(Dish dish, DishesGroup dishesGroup){
-        List<Dish> dishes = dishesGroup.getDishes();
-        for (Dish d: dishes) {
-            if (d.getDish_id() == dish.getDish_id())
-                d.select();
-        }
-        return dishesGroup;
-    }
-
-    public void showDishesGroup(DishesGroup dishesGroup){
-        String dishesGroupName = dishesGroup.getName();
-        TextView name = new TextView(this);
-        name.setText(dishesGroupName);
-        name.setTextAppearance(this, R.style.TextAppearance_AppCompat_Body2);
-        layout.addView(name);
-
-        RadioGroup radioGroup = new RadioGroup(this);
-
-
-        for (Dish dish:
-             dishesGroup.getDishes()) {
-            RadioButton newRadioButton = new RadioButton(this);
-            newRadioButton.setText(dish.getName());
-            if (dish.isSelected())
-                newRadioButton.setChecked(true);
-            //newRadioButton.setEnabled(false);
-            newRadioButton.setClickable(false);
-            newRadioButton.setTextAppearance(this, R.style.TextAppearance_AppCompat_Body2);
-            radioGroup.addView(newRadioButton);
-        }
-        layout.addView(radioGroup);
     }
 
     @Override

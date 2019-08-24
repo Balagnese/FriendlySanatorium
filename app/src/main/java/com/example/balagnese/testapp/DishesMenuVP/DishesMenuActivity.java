@@ -8,6 +8,8 @@ import android.widget.Button;
 
 import com.example.balagnese.testapp.R;
 import com.example.balagnese.testapp.TodayDishesVP.TodayDishesActivity;
+import com.example.balagnese.testapp.TomorrowDishesVP.TomorrowDishesActivity;
+import com.example.balagnese.testapp.TomorrowDishesVP.TomorrowDishesPresenter;
 
 public class DishesMenuActivity extends AppCompatActivity implements DishesMenuView{
 
@@ -28,14 +30,21 @@ public class DishesMenuActivity extends AppCompatActivity implements DishesMenuV
                 dmp.navigateTodayDishesActivity();
             }
         });
+
+        Button tomorrow = findViewById(R.id.tomorrowButton);
+        tomorrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dmp.navigateToTomorrowDishesActivity();
+            }
+        });
     }
 
     @Override
     public void navigateToTomorrowDishesActivity(String publicId) {
-//        TODO not today
-//        Intent intent = new Intent(this, TodayDishesActivity.class);
-//        intent.putExtra("client", publicId);
-//        startActivity(intent);
+        Intent intent = new Intent(this, TomorrowDishesActivity.class);
+        intent.putExtra("client", publicId);
+        startActivity(intent);
     }
 
     @Override

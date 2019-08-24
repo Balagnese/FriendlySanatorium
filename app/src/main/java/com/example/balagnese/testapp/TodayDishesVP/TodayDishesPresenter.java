@@ -24,21 +24,21 @@ public class TodayDishesPresenter {
 
     public void loadClientDishes(){
 
-        DateTime dateTime = DateTime.now();
-        StringBuilder stringBuilder = new StringBuilder();
-        String year = String.valueOf(dateTime.year().get());
-        String month = String.valueOf(dateTime.monthOfYear().get());
-        DateTime m = DateTime.now();
+//        DateTime dateTime = DateTime.now();
+//        StringBuilder stringBuilder = new StringBuilder();
+//        String year = String.valueOf(dateTime.year().get());
+//        String month = String.valueOf(dateTime.monthOfYear().get());
+//        DateTime m = DateTime.now();
+//
+//        String day = String.valueOf(dateTime.dayOfMonth().get());
+//        if (month.length() < 2)
+//            month = "0".concat(month);
+//        if (day.length() < 2)
+//            day = "0".concat(day);
+//        stringBuilder.append(year).append("-").append(month).append("-").append(day);
 
-        String day = String.valueOf(dateTime.dayOfMonth().get());
-        if (month.length() < 2)
-            month = "0".concat(month);
-        if (day.length() < 2)
-            day = "0".concat(day);
-        stringBuilder.append(year).append("-").append(month).append("-").append(day);
-
-        String date = stringBuilder.toString();
-//        String date = "2019-08-21";
+//        String date = stringBuilder.toString();
+        String date = "2019-08-21";
         if (publicId.equals("")){
             dm.getClientMenu(date, new DishModel.Callback() {
                 @Override
