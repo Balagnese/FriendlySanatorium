@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.balagnese.testapp">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name=".MainApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <!-- <activity android:name=".DisplayMessageActivity"></activity> -->
+        <activity
+            android:name=".DisplayMessageActivity"
+            android:parentActivityName=".MainActivity">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity android:name=".ClientVP.ClientActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ChildVP.ChildActivity" />
+        <activity android:name=".ClientSheduleVP.ClientSheduleActivity" />
+        <activity android:name=".ClientProcedureVP.ClientProcedureActivity" />
+        <activity android:name=".ProceduresVP.ProceduresActivity" />
+        <activity android:name=".AuthVP.AuthActivity" />
+        <activity android:name=".ProcedureVP.ProcedureActivity" />
+        <activity android:name=".TodayDishesVP.TodayDishesActivity" />
+        <activity android:name=".MenuDishesVP.MenuDishesActivity" />
+        <activity android:name=".DishesMenuVP.DishesMenuActivity" />
+        <activity android:name=".TomorrowDishesVP.TomorrowDishesActivity"></activity>
+    </application>
+
+</manifest>
