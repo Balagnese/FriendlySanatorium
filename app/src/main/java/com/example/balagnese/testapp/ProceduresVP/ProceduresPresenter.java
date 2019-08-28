@@ -3,6 +3,8 @@ package com.example.balagnese.testapp.ProceduresVP;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.example.balagnese.testapp.ClientInfo;
+import com.example.balagnese.testapp.DataTypes.Client;
 import com.example.balagnese.testapp.DataTypes.ClientProcedure;
 import com.example.balagnese.testapp.Models.ProcedureModel;
 

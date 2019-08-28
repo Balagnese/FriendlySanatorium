@@ -5,14 +5,13 @@ import com.example.balagnese.testapp.DataTypes.AuthResponse;
 import com.example.balagnese.testapp.DataTypes.Client;
 import com.example.balagnese.testapp.DataTypes.ClientProcedure;
 import com.example.balagnese.testapp.DataTypes.ClientSelectedDishModel;
+import com.example.balagnese.testapp.DataTypes.PostDish;
 import com.example.balagnese.testapp.DataTypes.PostResponse;
 import com.example.balagnese.testapp.DataTypes.Procedure;
-import com.example.balagnese.testapp.Post;
 
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
@@ -67,10 +66,9 @@ public interface JSONPlaceHolderApi {
                                                       @Path("date") String date, @Path("public_id") String client_public_id);
 
     @POST("/api/clients/me/dishes")
-    public Call<PostResponse> selectClientDish(@Header("Authorization") String authorization, @Body int daily_menu_id,
-                                               @Body String meal_tag, @Body int dishes_group_id, @Body int dish_id);
+    public Call<PostResponse> selectClientDish(@Header("Authorization") String authorization, @Body PostDish postDish);
 
     @POST("/clients/{public_id}/dishes")
-    public Call<PostResponse> selectChildDish(@Header("Authorization") String authorization, @Path("public_id") int public_id,
-                                              @Body int daily_menu_id, @Body String meal_tag, @Body int dishes_group_id, @Body int dish_id);
+    public Call<PostResponse> selectChildDish(@Header("Authorization") String authorization, @Path("public_id") String public_id,
+                                              @Body PostDish postDish);
 }

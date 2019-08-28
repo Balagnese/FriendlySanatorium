@@ -13,10 +13,9 @@ import android.widget.TextView;
 
 import com.example.balagnese.testapp.ClientVP.ClientActivity;
 import com.example.balagnese.testapp.DataTypes.ClientProcedure;
-import com.example.balagnese.testapp.ProcedureVP.ProcedurePresenter;
+import com.example.balagnese.testapp.ProcedureVP.ProcedureActivity;
 import com.example.balagnese.testapp.R;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
@@ -29,7 +28,7 @@ public class ProceduresActivity extends AppCompatActivity implements ProceduresV
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_child_procedure);
+        setContentView(R.layout.activity_procedures);
         Intent intent = getIntent();
         String publicId = intent.getStringExtra("client");
         pp = new ProceduresPresenter(this, publicId);
@@ -46,9 +45,6 @@ public class ProceduresActivity extends AppCompatActivity implements ProceduresV
 
     @Override
     public void showProcedures(Map<String, List<ClientProcedure>> procedures) {
-
-//        TextView childName = findViewById(R.id.childNametextView);
-//        childName.setText(cpp.getChildFIO());
 
         TableLayout tableLayout = findViewById(R.id.ppprocedureTableLayout);
 
@@ -106,6 +102,7 @@ public class ProceduresActivity extends AppCompatActivity implements ProceduresV
                 procedure.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        int i = 0;
                         pp.navigateToProcedureActivity(p);
                     }
                 });
@@ -157,6 +154,8 @@ public class ProceduresActivity extends AppCompatActivity implements ProceduresV
 
     @Override
     public void navigateToProcedureActivity(ClientProcedure procedure) {
-
+        Intent intent = new Intent(this, ProcedureActivity.class);
+        intent.putExtra("id", procedure.getProcedure().getId());
+        startActivity(intent);
     }
 }

@@ -15,16 +15,25 @@ public class ProcedurePresenter {
     private Handler handler;
 
     public ProcedurePresenter(ProcedureView procedureView, int id){
+        handler = new android.os.Handler(Looper.getMainLooper());
         this.pv = procedureView;
         loadProcedureInfo(id);
-        handler = new android.os.Handler(Looper.getMainLooper());
-    }
 
+    }
+    //TODO найти баг в просмотре процедуры
     public void loadProcedureInfo(int id){
         pm.getProcedure(id, new ProcedureModel.ProcedureCallback() {
             @Override
-            public void onProcedureReceive(Procedure procedure) {
-                pv.showProcedureInfo(procedure);
+            public void onProcedureReceive(final Procedure procedure) {
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        pv.showProcedureInfo(procedure);
+                    }
+                };
+                handler.post(runnable);
+
+
             }
 
             @Override

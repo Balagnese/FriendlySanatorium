@@ -4,9 +4,13 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.example.balagnese.testapp.DataTypes.ClientSelectedDishModel;
+import com.example.balagnese.testapp.DataTypes.PostDish;
+import com.example.balagnese.testapp.DataTypes.PostResponse;
 import com.example.balagnese.testapp.Models.DishModel;
 
 import org.joda.time.DateTime;
+
+import java.util.List;
 
 public class TomorrowDishesPresenter {
     
@@ -23,7 +27,6 @@ public class TomorrowDishesPresenter {
     }
     
     public void loadMenu(){
-
 //        DateTime dateTime = DateTime.now();
 //        dateTime.plusDays(1);
 //        StringBuilder stringBuilder = new StringBuilder();
@@ -78,6 +81,50 @@ public class TomorrowDishesPresenter {
             });
         }
     }
+
+    public void selectMenu(List<PostDish> postDishes){
+        if (publicId.equals("")){
+            for (PostDish postDish:
+                 postDishes) {
+                dm.selectClientDishes(postDish, new DishModel.PostCallback() {
+                    @Override
+                    public void onDishesPost(PostResponse postResponse) {
+                        String message = postResponse.getMessage();
+                    }
+
+                    @Override
+                    public void onDishesPostFailure(Exception e) {
+
+                    }
+                });
+            }
+        }
+        else
+        {
+            for (PostDish postDish:
+                    postDishes) {
+                dm.selectChildDishes(postDish, publicId, new DishModel.PostCallback() {
+                    @Override
+                    public void onDishesPost(PostResponse postResponse) {
+                        String message = postResponse.getMessage();
+                    }
+
+                    @Override
+                    public void onDishesPostFailure(Exception e) {
+
+                    }
+                });
+            }
+        }
+
+    }
+
+    public void navigateToClientActivity(){
+        tdv.navigateToClientActivity();
+    }
+
+
+
 
 
 }
